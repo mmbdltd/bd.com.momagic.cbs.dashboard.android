@@ -1,5 +1,9 @@
 [versions]
 agp = "8.5.2"
+lombok = "1.18.34"
+slf4jAndroid = "1.7.36"
+jacksonDataFormatXml = "2.17.2"
+jacksonDataFormatCsv = "2.17.2"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
@@ -12,6 +16,10 @@ navigationFragment = "2.7.7"
 navigationUi = "2.7.7"
 
 [libraries]
+lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
+slf4j-android = { module = "org.slf4j:slf4j-android", version.ref = "slf4jAndroid" }
+jackson-dataformat-xml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-xml", version.ref = "jacksonDataFormatXml" }
+jackson-dataformat-csv = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-csv", version.ref = "jacksonDataFormatCsv" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
