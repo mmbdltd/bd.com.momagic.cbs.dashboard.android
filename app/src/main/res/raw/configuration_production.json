@@ -2,5 +2,31 @@
   "version": 1.0,
   "instanceId": "",
   "applicationName": "",
-  "profile": "production"
+  "profile": "production",
+  "httpClient": {
+    "hostnameVerificationDisabled": true,
+    "securityDisabled": true,
+    "basicAuthenticationRetryLimit": 0,
+    "maximumRetryCount": 0,
+    "retryIntervalInMilliseconds": 5000,
+    "connectTimeoutInMilliseconds": 5000,
+    "readTimeoutInMilliseconds": 30000,
+    "preferredHttpVersion": "1.1",
+    "defaultMaximumAsynchronousParallelRequestsPerHost": 0,
+    "hostBasedMaximumAsynchronousParallelRequests": { },
+    "headerValuesListInitialCapacity": 2,
+    "headersMapInitialCapacity": 3,
+    "userAgent": "MoMagic Http Client",
+    "lowerLimitOfStatusCodeToRetry": 300,
+    "upperLimitOfStatusCodeToRetry": 600,
+    "statusCodesToRetry": [],
+    "csvWriter": {
+      "enabled": true,
+      "escapeValues": true,
+      "flushAutomatically": true,
+      "bufferLength": 8192,
+      "filePathFormat": "{{androidRoot}}/bd.com.momagic.cbs.dashboard.android/application-data/{{applicationName}}/{{instanceId}}/csv-files/http-client/outgoing-requests-{{date}}.csv",
+      "headers": []
+    }
+  }
 }

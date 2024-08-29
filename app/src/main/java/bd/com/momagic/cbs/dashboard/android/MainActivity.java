@@ -3,7 +3,6 @@ package bd.com.momagic.cbs.dashboard.android;
 import android.os.Bundle;
 import android.view.Menu;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.navigation.NavController;
@@ -16,6 +15,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import bd.com.momagic.cbs.dashboard.android.core.dependencyinjection.ServiceProvider;
+import bd.com.momagic.cbs.dashboard.android.core.dependencyinjection.SingletonServiceProvider;
+import bd.com.momagic.cbs.dashboard.android.core.networking.http.HttpClient;
+import bd.com.momagic.cbs.dashboard.android.core.networking.http.HttpRequest;
+import bd.com.momagic.cbs.dashboard.android.core.networking.http.HttpResponse;
 import bd.com.momagic.cbs.dashboard.android.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,10 +36,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.appBarMain.toolbar);
-        binding.appBarMain.fab.setOnClickListener(view
-                -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null)
-                    .setAnchorView(R.id.fab).show());
+        binding.appBarMain.fab.setOnClickListener(view -> {
+            final ServiceProvider serviceProvider = SingletonServiceProvider.getInstance();
+            final HttpClient httpClient = serviceProvider.get(HttpClient.class);
+            final HttpResponse<String> response = httpClient.sendRequestAsync(HttpRequest.createForString()
+                    .setUrl("http://192.168.33.109/api/miscellaneousServiceProvider/v1.0/ping")
+                    .setUrl("https://www.google.com")
+            ).tryAwait();
+
+            System.out.println(response.getBodyAsString());
+            System.out.println(response.getMessage());
+        });
+
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
         // Passing each menu ID as a set of Ids because each

@@ -1,5 +1,7 @@
 package bd.com.momagic.cbs.dashboard.android.core.text.csv;
 
+import android.os.Environment;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -142,6 +144,7 @@ class CsvWriterImpl implements CsvWriter {
 
         // replacing all the placeholders...
         String filePath = filePathFormat
+                .replace("{{androidRoot}}", Environment.getDataDirectory().getAbsolutePath())
                 .replace("{{applicationName}}", applicationName)
                 .replace("{{instanceId}}", instanceId)
                 .replace("{{date}}", formattedDate);

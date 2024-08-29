@@ -13,6 +13,7 @@ public final class StreamUtilities {
     private static final Logger logger = LoggerFactory.getLogger(StreamUtilities.class);
     private static final int BUFFER_LENGTH = 8192;
     private static final int STRING_BUILDER_INITIAL_CAPACITY = 8192;
+    private static final byte[] EMPTY_BYTE_ARRAY = new byte[0];
 
     /**
      * Reads bytes into a portion of an array.
@@ -61,6 +62,80 @@ public final class StreamUtilities {
     }
 
     /**
+     * Reads data from the input stream as an array of bytes.
+     * @param inputStream Input stream to read from.
+     * @param closeAutomatically Setting this flag to true shall close
+     *                           the input stream after reading or exception.
+     * @param logsEnabled This flag is used to determine if logs shall be enabled.
+     * @return The bytes read from the input stream.
+     */
+    public static byte[] readBytes(
+            final InputStream inputStream,
+            final boolean closeAutomatically,
+            final boolean logsEnabled) {
+        // if the input stream is null...
+        if (inputStream == null) {
+            logger.warn("Provided input stream is 'null'.");
+
+            // we shall return an empty byte array...
+            return EMPTY_BYTE_ARRAY;
+        }
+
+        final byte[] buffer = new byte[BUFFER_LENGTH];
+        byte[] content;
+        int bytesRead = 0;
+
+        try (final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(BUFFER_LENGTH)) {
+            // NOTE: IF BYTES READ IS EQUAL TO -2, IT MEANS EXCEPTION HAS OCCURRED.
+            // THUS, THIS LOOP SHALL BE BROKEN...
+            while ((bytesRead = read(buffer, 0, buffer.length, inputStream)) > 0) {
+                byteArrayOutputStream.write(buffer, 0, bytesRead);
+            }
+
+            // retrieving the entire content as byte array...
+            content = byteArrayOutputStream.toByteArray();
+        } catch (final Exception exception) {
+            if (logsEnabled) {
+                logger.error("An exception occurred while reading from the input stream.", exception);
+            }
+
+            content = EMPTY_BYTE_ARRAY;
+        }
+
+        // if 'closeAutomatically' flag is true,
+        // we shall try to close the input stream...
+        if (closeAutomatically) { tryClose(inputStream); }
+        // returns empty string in case of exception...
+        if (bytesRead < -1) { return EMPTY_BYTE_ARRAY; }
+
+        return content;
+    }
+
+    /**
+     * Reads data from the input stream as an array of bytes.
+     * @param inputStream Input stream to read from.
+     * @param closeAutomatically Setting this flag to true shall close
+     *                           the input stream after reading or exception.
+     * @return The bytes read from the input stream.
+     */
+    public static byte[] readBytes(
+            final InputStream inputStream,
+            final boolean closeAutomatically) {
+        return readBytes(inputStream, closeAutomatically, true);
+    }
+
+    /**
+     * Reads data from the input stream as an array of bytes.
+     * @param inputStream Input stream to read from.
+     * @implNote The input stream is closed after reading completes
+     * or exception occurs.
+     * @return The bytes read from the input stream.
+     */
+    public static byte[] readBytes(final InputStream inputStream) {
+        return readBytes(inputStream, true);
+    }
+
+    /**
      * Reads data from the input stream as string.
      * @implNote The input stream is closed after reading completes
      * or exception occurs.
@@ -81,33 +156,15 @@ public final class StreamUtilities {
     public static String readString(
             final InputStream inputStream,
             final boolean closeAutomatically) {
-        // if the input stream is null...
-        if (inputStream == null) {
-            logger.warn("Provided input stream is 'null'.");
+        final byte[] content = readBytes(inputStream, closeAutomatically);
 
+        // if no content is read...
+        if (content.length == 0) {
             // we shall return an empty string...
             return StringUtilities.getEmptyString();
         }
 
-        final byte[] buffer = new byte[BUFFER_LENGTH];
-        int bytesRead = 0;
-        final StringBuilder contentBuilder = new StringBuilder(STRING_BUILDER_INITIAL_CAPACITY);
-
-        // NOTE: IF BYTES READ IS EQUAL TO -2, IT MEANS EXCEPTION HAS OCCURRED.
-        // THUS, THIS LOOP SHALL BE BROKEN...
-        while ((bytesRead = read(buffer, 0, buffer.length, inputStream)) > 0) {
-            final String content = Encoder.toUtf8(buffer, 0, bytesRead);
-
-            contentBuilder.append(content);
-        }
-
-        // if 'closeAutomatically' flag is true,
-        // we shall try to close the input stream...
-        if (closeAutomatically) { tryClose(inputStream); }
-        // returns empty string in case of exception...
-        if (bytesRead < -1) { return StringUtilities.getEmptyString(); }
-
-        return contentBuilder.toString().trim();
+        return Encoder.toUtf8(content, 0, content.length).trim();
     }
 
     /**

@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import bd.com.momagic.cbs.dashboard.android.core.networking.http.HttpClientConfiguration;
 import bd.com.momagic.cbs.dashboard.android.core.text.JsonSerializer;
 import lombok.Data;
 
@@ -16,6 +17,7 @@ public final class Configuration {
     private String profile;
     @JsonIgnore
     private Context context;
+    private HttpClientConfiguration httpClient;
 
     public String toJson(final boolean prettyPrint) {
         return JsonSerializer.serialize(this, prettyPrint);

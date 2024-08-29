@@ -14,7 +14,9 @@ public final class ExceptionUtilities {
      *                  be retrieved.
      * @return The stack trace.
      */
-    public static String retrieveStackTrace(Exception exception) {
+    public static String retrieveStackTrace(final Exception exception) {
+        if (exception == null) { return StringUtilities.getEmptyString(); }
+
         // initializing a string writer...
         final Writer writer = new StringWriter(STRING_WRITER_INITIAL_CAPACITY);
         // preparing a print writer...
