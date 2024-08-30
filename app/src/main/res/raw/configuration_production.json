@@ -25,7 +25,7 @@
       "escapeValues": true,
       "flushAutomatically": true,
       "bufferLength": 8192,
-      "filePathFormat": "{{androidRoot}}/bd.com.momagic.cbs.dashboard.android/application-data/{{applicationName}}/{{instanceId}}/csv-files/http-client/outgoing-requests-{{date}}.csv",
+      "filePathFormat": "{{applicationDataDirectory}}/{{profile}}/csv-files/http-client/outgoing-requests-{{date}}.csv",
       "headers": []
     }
   }
