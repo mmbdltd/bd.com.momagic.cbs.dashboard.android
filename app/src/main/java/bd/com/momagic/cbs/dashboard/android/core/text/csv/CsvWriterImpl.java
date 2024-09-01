@@ -142,7 +142,7 @@ class CsvWriterImpl implements CsvWriter {
 
         // replacing all the placeholders...
         String filePath = filePathFormat
-                .replace("{{applicationDataDirectory}}", configuration.getContext().getCacheDir().getAbsolutePath())
+                .replace("{{applicationDataDirectory}}", configuration.getCacheDirectory())
                 .replace("{{profile}}", configuration.getProfile())
                 .replace("{{applicationName}}", applicationName)
                 .replace("{{instanceId}}", instanceId)

@@ -1,8 +1,6 @@
 package bd.com.momagic.cbs.dashboard.android.core.configurations;
 
-import android.content.Context;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import androidx.annotation.NonNull;
 
 import bd.com.momagic.cbs.dashboard.android.core.networking.http.HttpClientConfiguration;
 import bd.com.momagic.cbs.dashboard.android.core.text.JsonSerializer;
@@ -15,14 +13,15 @@ public final class Configuration {
     private String instanceId;
     private String applicationName;
     private String profile;
-    @JsonIgnore
-    private Context context;
+    private String cacheDirectory;
+    private String filesDirectory;
     private HttpClientConfiguration httpClient;
 
     public String toJson(final boolean prettyPrint) {
         return JsonSerializer.serialize(this, prettyPrint);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return toJson(true);
