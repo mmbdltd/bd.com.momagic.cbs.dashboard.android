@@ -126,9 +126,6 @@ class HttpClientImpl implements HttpClient {
 
             final Set<String> valueSet = new TreeSet<>(valueList);
 
-            System.out.println(entry.getKey());
-            System.out.println(valueSet);
-
             processedHeaders.put(entry.getKey(), valueSet);
         }
 
