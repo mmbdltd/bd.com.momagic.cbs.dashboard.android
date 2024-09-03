@@ -17,43 +17,40 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <androidx.cardview.widget.CardView
+            <bd.com.momagic.cbs.dashboard.android.ui.customcardview.CustomCardView
+                android:id="@+id/custom_card_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardElevation="11dp"
-                app:cardCornerRadius="11dp"
-                app:cardUseCompatPadding="true"
-                app:cardBackgroundColor="@color/orange">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/white"
-                        android:text="9546313"
-                        android:textSize="48dp"
-                        android:textAlignment="center"
-                        android:paddingStart="0dp"
-                        android:paddingEnd="0dp"
-                        android:paddingTop="5dp"
-                        android:paddingBottom="5dp" />
+                android:layout_height="match_parent" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Total SMS Received (Today)"
-                        android:textSize="16sp"
-                        android:textColor="@color/white"
-                        android:textAlignment="center"
-                        android:paddingStart="0dp"
-                        android:paddingEnd="0dp"
-                        android:paddingTop="5dp"
-                        android:paddingBottom="10dp"/>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            <bd.com.momagic.cbs.dashboard.android.ui.customcardview.CustomCardView
+                android:id="@+id/custom_card_view2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
+            <bd.com.momagic.cbs.dashboard.android.ui.customcardview.CustomCardView
+                android:id="@+id/custom_card_view3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <bd.com.momagic.cbs.dashboard.android.ui.customcardview.CustomCardView
+                android:id="@+id/custom_card_view4"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <bd.com.momagic.cbs.dashboard.android.ui.customcardview.CustomCardView
+                android:id="@+id/custom_card_view6"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <bd.com.momagic.cbs.dashboard.android.ui.customcardview.CustomCardView
+                android:id="@+id/custom_card_view7"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <bd.com.momagic.cbs.dashboard.android.ui.customcardview.CustomCardView
+                android:id="@+id/custom_card_view8"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
         </LinearLayout>
     </ScrollView>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

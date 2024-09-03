@@ -2,6 +2,8 @@ package bd.com.momagic.cbs.dashboard.android;
 
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -73,7 +75,23 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        final Button logoutButton = navigationView.findViewById(R.id.logout_button);
+        final Menu menu = navigationView.getMenu();
+        final MenuItem menuItem = menu.findItem(R.id.navbar_custom_menu_item);
+        final View menuItemActionView = menuItem.getActionView();
+        final Button logoutButton = menuItemActionView == null
+                ? null
+                : menuItemActionView.findViewById(R.id.logout_button);
+
+        if (logoutButton == null) {
+            logger.warn("Logout button isn't found. Please modify the source code accordingly.");
+        } else {
+            // adding logout button action...
+            logoutButton.setOnClickListener(view -> {
+                final AuthenticationToken token = authenticationService.logoutAsync().tryAwait();
+
+                authenticationViewModel.getToken().setValue(token);
+            });
+        }
 
         authenticationViewModel.getToken().observe(this, token -> {
             final boolean authenticated = token.isAuthenticated();
@@ -88,13 +106,6 @@ public class MainActivity extends AppCompatActivity {
 
             navController.popBackStack(authenticated ? R.id.nav_login : R.id.nav_home, true);
             navController.navigate(authenticated ? R.id.nav_home : R.id.nav_login);
-        });
-
-        // adding logout button action...
-        logoutButton.setOnClickListener(view -> {
-            final AuthenticationToken token = authenticationService.logoutAsync().tryAwait();
-
-            authenticationViewModel.getToken().setValue(token);
         });
 
         // we want to pop the login fragment from the navigation history stack...
