@@ -85,6 +85,8 @@ public class MainActivity extends AppCompatActivity {
             drawer.setDrawerLockMode(authenticated
                     ? DrawerLayout.LOCK_MODE_UNLOCKED
                     : DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+
+            navController.popBackStack(authenticated ? R.id.nav_login : R.id.nav_home, true);
             navController.navigate(authenticated ? R.id.nav_home : R.id.nav_login);
         });
 
