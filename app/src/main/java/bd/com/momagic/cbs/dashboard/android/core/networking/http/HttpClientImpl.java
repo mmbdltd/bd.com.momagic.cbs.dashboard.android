@@ -3,6 +3,8 @@ package bd.com.momagic.cbs.dashboard.android.core.networking.http;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -132,6 +134,26 @@ class HttpClientImpl implements HttpClient {
         return processedHeaders;
     }
 
+    private static InputStream getInputStream(
+            final HttpURLConnection connection,
+            final Logger logger) {
+        InputStream inputStream = null;
+
+        try {
+            // trying to get the input stream...
+            inputStream = connection.getInputStream();
+        } catch (final Exception exception) { }
+
+        if (inputStream != null) { return inputStream; }
+
+        try {
+            // if exception occurs, we shall try to retrieve the error stream...
+            inputStream = connection.getErrorStream();
+        } catch (final Exception exception) { }
+
+        return inputStream;
+    }
+
     private static <RequestBodyType> HttpResponse<RequestBodyType> sendHttpRequest(
             final HttpRequest<RequestBodyType> request,
             final HttpClientConfiguration configuration,
@@ -144,6 +166,20 @@ class HttpClientImpl implements HttpClient {
             connection.setRequestMethod(request.getMethod().name());
             connection.setConnectTimeout(configuration.getConnectTimeoutInMilliseconds());
             connection.setReadTimeout(configuration.getReadTimeoutInMilliseconds());
+
+            final Map<String, Set<String>> requestHeaders = request.getHeaders();
+
+            if (requestHeaders != null) {
+                final Set<Map.Entry<String, Set<String>>> requestHeaderEntries = requestHeaders.entrySet();
+
+                for (final Map.Entry<String, Set<String>> entry : requestHeaderEntries) {
+                    final Set<String> requestHeaderValues = entry.getValue();
+
+                    for (final String value : requestHeaderValues) {
+                        connection.setRequestProperty(entry.getKey(), value);
+                    }
+                }
+            }
 
             // if we have request body...
             if (request.getBody() != null) {
@@ -164,8 +200,10 @@ class HttpClientImpl implements HttpClient {
             // setting message...
             response.setMessage("Received HTTP status code " + response.getStatusCode() + ".");
 
+            // retrieving the input stream...
+            final InputStream inputStream = getInputStream(connection, logger);
             // reading content (as bytes) from the input stream...
-            final byte[] content = StreamUtilities.readBytes(connection.getInputStream());
+            final byte[] content = StreamUtilities.readBytes(inputStream);
 
             // setting body...
             response.setBody(content);

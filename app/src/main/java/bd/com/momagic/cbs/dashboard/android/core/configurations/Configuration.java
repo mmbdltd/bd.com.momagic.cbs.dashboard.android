@@ -2,6 +2,7 @@ package bd.com.momagic.cbs.dashboard.android.core.configurations;
 
 import androidx.annotation.NonNull;
 
+import bd.com.momagic.cbs.dashboard.android.core.modules.authentication.AuthenticationServiceConfiguration;
 import bd.com.momagic.cbs.dashboard.android.core.networking.http.HttpClientConfiguration;
 import bd.com.momagic.cbs.dashboard.android.core.text.JsonSerializer;
 import lombok.Data;
@@ -16,6 +17,7 @@ public final class Configuration {
     private String cacheDirectory;
     private String filesDirectory;
     private HttpClientConfiguration httpClient;
+    private AuthenticationServiceConfiguration authenticationService;
 
     public String toJson(final boolean prettyPrint) {
         return JsonSerializer.serialize(this, prettyPrint);

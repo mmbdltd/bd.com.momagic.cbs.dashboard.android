@@ -116,4 +116,16 @@ public final class FileSystemUtilities {
         // returns if the directory is created...
         return directoryCreated;
     }
+
+    public static boolean deleteFile(final String filePath) {
+        try {
+            final File file = new File(filePath);
+
+            if (!file.isFile()) { return false; }
+
+            return file.delete();
+        } catch (final Exception exception) {
+            return false;
+        }
+    }
 }

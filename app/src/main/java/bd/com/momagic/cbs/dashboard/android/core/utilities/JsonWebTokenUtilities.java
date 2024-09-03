@@ -63,4 +63,14 @@ public final class JsonWebTokenUtilities {
 
         return tokenContent;
     }
+
+    public static Object extractValue(final String attributeName, final String token) {
+        final Map<String, Object> decodedToken = decode(token, Encoding.BASE_64);
+        @SuppressWarnings("unchecked")
+        final Map<String, Object> decodedTokenPayload = (Map<String, Object>) decodedToken.get("decodedPayload");
+
+        return decodedTokenPayload == null
+                ? null
+                : decodedTokenPayload.get(attributeName);
+    }
 }

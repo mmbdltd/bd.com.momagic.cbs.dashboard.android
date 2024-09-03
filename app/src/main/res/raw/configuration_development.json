@@ -3,6 +3,11 @@
   "instanceId": "",
   "applicationName": "",
   "profile": "development",
+  "authenticationService": {
+    "loginRequestUrl": "https://www.api.partners.momagic.com.bd/api/auth/login",
+    "tokenRenewalRequestUrl": "https://www.api.partners.momagic.com.bd/api/auth/refreshToken",
+    "tokenFilePathFormat": "{{applicationDataDirectory}}/{{profile}}/token.json"
+  },
   "httpClient": {
     "hostnameVerificationDisabled": true,
     "securityDisabled": true,

@@ -1,0 +1,4 @@
+<resources>
+    <integer name="login_fragment_email_maximum_length">320</integer>
+    <integer name="login_fragment_password_maximum_length">64</integer>
+</resources>

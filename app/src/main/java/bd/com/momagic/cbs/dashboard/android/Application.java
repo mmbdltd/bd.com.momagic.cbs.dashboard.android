@@ -4,6 +4,9 @@ import bd.com.momagic.cbs.dashboard.android.core.configurations.Configuration;
 import bd.com.momagic.cbs.dashboard.android.core.configurations.ConfigurationProvider;
 import bd.com.momagic.cbs.dashboard.android.core.dependencyinjection.ServiceProvider;
 import bd.com.momagic.cbs.dashboard.android.core.dependencyinjection.SingletonServiceProvider;
+import bd.com.momagic.cbs.dashboard.android.core.modules.authentication.AuthenticationService;
+import bd.com.momagic.cbs.dashboard.android.core.modules.authentication.AuthenticationServiceImpl;
+import bd.com.momagic.cbs.dashboard.android.core.modules.authentication.AuthenticationToken;
 import bd.com.momagic.cbs.dashboard.android.core.networking.http.HttpClient;
 
 import android.content.Context;
@@ -37,5 +40,15 @@ public class Application extends android.app.Application {
 
         final ServiceProvider serviceProvider = SingletonServiceProvider.getInstance();
         serviceProvider.get(HttpClient.class, () -> HttpClient.create(configuration.getHttpClient()));
+
+        final AuthenticationService authenticationService = serviceProvider.get(AuthenticationServiceImpl.class);
+        final AuthenticationToken token = authenticationService.loadAuthenticationTokenAsync()
+                .tryAwait();
+
+        if (token.isAuthenticated()) {
+            logger.info("User is authenticated.");
+        } else {
+            logger.warn("User is not authenticated");
+        }
     }
 }

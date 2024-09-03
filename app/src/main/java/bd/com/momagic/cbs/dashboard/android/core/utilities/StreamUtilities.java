@@ -104,7 +104,7 @@ public final class StreamUtilities {
 
         // if 'closeAutomatically' flag is true,
         // we shall try to close the input stream...
-        if (closeAutomatically) { tryClose(inputStream); }
+        if (closeAutomatically) { CloseableUtilities.tryClose(inputStream); }
         // returns empty string in case of exception...
         if (bytesRead < -1) { return EMPTY_BYTE_ARRAY; }
 
@@ -203,19 +203,5 @@ public final class StreamUtilities {
         // returning the input stream if creation succeeds.
         // otherwise returning null...
         return inputStream;
-    }
-
-    /**
-     * Tries to close the closeable.
-     * @param closeable Closeable to be closed.
-     */
-    public static void tryClose(Closeable closeable) {
-        if (closeable == null) { return; }
-
-        try {
-            closeable.close();
-        } catch (Exception exception) {
-            logger.warn("An exception occurred while closing the input stream.", exception);
-        }
     }
 }

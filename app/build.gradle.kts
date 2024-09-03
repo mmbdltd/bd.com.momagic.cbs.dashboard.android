@@ -37,6 +37,7 @@ android {
     }
 
     buildFeatures {
+        dataBinding = true
         viewBinding = true
         buildConfig = true
     }
@@ -58,4 +59,5 @@ dependencies {
     implementation(libs.slf4j.android)
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
+    implementation(libs.swipe.refresh.layout)
 }
