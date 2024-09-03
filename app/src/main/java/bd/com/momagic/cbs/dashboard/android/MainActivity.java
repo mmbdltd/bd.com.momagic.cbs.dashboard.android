@@ -97,6 +97,8 @@ public class MainActivity extends AppCompatActivity {
             authenticationViewModel.getToken().setValue(token);
         });
 
+        // we want to pop the login fragment from the navigation history stack...
+        navController.popBackStack(R.id.nav_login, true);
         // this will make sure to navigate to home if a user is already authenticated...
         authenticationViewModel.getToken().setValue(
                 authenticationService.getAuthenticationToken());
@@ -112,7 +114,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+        final NavController navController = Navigation.findNavController(this,
+                R.id.nav_host_fragment_content_main);
+
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
