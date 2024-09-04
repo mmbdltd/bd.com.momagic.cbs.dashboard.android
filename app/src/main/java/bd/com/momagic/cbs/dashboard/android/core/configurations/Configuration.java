@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import bd.com.momagic.cbs.dashboard.android.core.modules.authentication.AuthenticationServiceConfiguration;
 import bd.com.momagic.cbs.dashboard.android.core.networking.http.HttpClientConfiguration;
 import bd.com.momagic.cbs.dashboard.android.core.text.JsonSerializer;
+import bd.com.momagic.cbs.dashboard.android.core.threading.AsyncTaskConfiguration;
 import lombok.Data;
 
 @Data
@@ -18,6 +19,7 @@ public final class Configuration {
     private String filesDirectory;
     private HttpClientConfiguration httpClient;
     private AuthenticationServiceConfiguration authenticationService;
+    private AsyncTaskConfiguration asyncTask;
 
     public String toJson(final boolean prettyPrint) {
         return JsonSerializer.serialize(this, prettyPrint);

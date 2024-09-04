@@ -3,6 +3,7 @@ package bd.com.momagic.cbs.dashboard.android.core.threading;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import bd.com.momagic.cbs.dashboard.android.core.configurations.ConfigurationProvider;
 import bd.com.momagic.cbs.dashboard.android.core.utilities.MiscellaneousUtilities;
 import bd.com.momagic.cbs.dashboard.android.core.utilities.ObjectUtilities;
 import bd.com.momagic.cbs.dashboard.android.core.utilities.ThreadUtilities;
@@ -18,8 +19,33 @@ final class AsyncTaskExecutor {
 
     private static final int EXECUTOR_SERVICE_TERMINATION_WAIT_TIMEOUT_IN_MILLISECONDS = 20;
     private static final Logger logger = LoggerFactory.getLogger(AsyncTaskExecutor.class);
-    private static final ExecutorService executorService
-            = new ForkJoinPool(MiscellaneousUtilities.getAvailableProcessors());
+    private static final ExecutorService executorService = createExecutorService();
+
+    private static final int DEFAULT_PLATFORM_THREAD_COUNT = 2;     // <-- this is the fallback value...
+
+    private static int calculatePlatformThreadCount() {
+        final int availableProcessorCount = MiscellaneousUtilities.getAvailableProcessorCount();
+        final AsyncTaskConfiguration configuration = ConfigurationProvider.getConfiguration().getAsyncTask();
+
+        return Math.max(
+                Math.min(
+                        Math.max(
+                                (int) Math.ceil(availableProcessorCount * configuration.getAvailableProcessorCountMultiplier()),
+                                configuration.getMinimumPlatformThreadCount()
+                        ),
+                        configuration.getMaximumPlatformThreadCount()
+                ),
+                DEFAULT_PLATFORM_THREAD_COUNT
+        );
+    }
+
+    private static ExecutorService createExecutorService() {
+        final int platformThreadCount = calculatePlatformThreadCount();
+
+        logger.info("Platform thread count = {}", platformThreadCount);
+
+        return new ForkJoinPool(platformThreadCount);
+    }
 
     /**
      * This method submits a task to the executor service

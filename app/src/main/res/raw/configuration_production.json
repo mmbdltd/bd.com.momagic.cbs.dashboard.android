@@ -3,6 +3,11 @@
   "instanceId": "",
   "applicationName": "",
   "profile": "production",
+  "asyncTask": {
+    "minimumPlatformThreadCount": 8,
+    "maximumPlatformThreadCount": 16,
+    "availableProcessorCountMultiplier": 2.0
+  },
   "authenticationService": {
     "loginRequestUrl": "https://www.api.partners.momagic.com.bd/api/auth/login",
     "tokenRenewalRequestUrl": "https://www.api.partners.momagic.com.bd/api/auth/refreshToken",

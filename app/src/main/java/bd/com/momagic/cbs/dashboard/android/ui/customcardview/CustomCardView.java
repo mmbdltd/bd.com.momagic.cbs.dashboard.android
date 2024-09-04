@@ -12,27 +12,15 @@ import bd.com.momagic.cbs.dashboard.android.R;
 public class CustomCardView extends LinearLayout {
 
     public CustomCardView(Context context) {
-        super(context);
-
-        final LayoutInflater inflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.custom_card_view, this, true);
+        this(context, null);
     }
 
     public CustomCardView(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-
-        final LayoutInflater inflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.custom_card_view, this, true);
+        this(context, attrs, 0);
     }
 
     public CustomCardView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-
-        final LayoutInflater inflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.custom_card_view, this, true);
+        this(context, attrs, defStyleAttr, 0);
     }
 
     public CustomCardView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
