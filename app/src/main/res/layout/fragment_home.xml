@@ -3,10 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/refresh"
+    android:id="@+id/swipeRefreshLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.home.HomeFragment">
+    tools:context=".ui.home.HomeFragment"
+    android:background="@color/black">
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -18,39 +19,116 @@
             android:orientation="vertical">
 
             <bd.com.momagic.cbs.dashboard.android.ui.customcardview.CustomCardView
-                android:id="@+id/custom_card_view"
+                android:id="@+id/banglalinkRevenue"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                app:customCardViewBackgroundColor="@color/iris"
+                app:customCardViewTextColor="@color/white"
+                app:customCardViewTopText="03-Sep-2024 04:45:10 PM"
+                app:customCardViewCenterText="0 BDT"
+                app:customCardViewBottomText="Banglalink" />
 
             <bd.com.momagic.cbs.dashboard.android.ui.customcardview.CustomCardView
-                android:id="@+id/custom_card_view2"
+                android:id="@+id/grameenphoneRevenue"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                app:customCardViewBackgroundColor="@color/dodger_blue"
+                app:customCardViewTextColor="@color/white"
+                app:customCardViewTopText="03-Sep-2024 04:45:10 PM"
+                app:customCardViewCenterText="0 BDT"
+                app:customCardViewBottomText="Grameenphone" />
 
             <bd.com.momagic.cbs.dashboard.android.ui.customcardview.CustomCardView
-                android:id="@+id/custom_card_view3"
+                android:id="@+id/robiRevenue"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                app:customCardViewBackgroundColor="@color/orange"
+                app:customCardViewTextColor="@color/white"
+                app:customCardViewTopText="03-Sep-2024 04:45:10 PM"
+                app:customCardViewCenterText="0 BDT"
+                app:customCardViewBottomText="ROBI" />
 
             <bd.com.momagic.cbs.dashboard.android.ui.customcardview.CustomCardView
-                android:id="@+id/custom_card_view4"
+                android:id="@+id/teletalkRevenue"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                app:customCardViewBackgroundColor="@color/green"
+                app:customCardViewTextColor="@color/white"
+                app:customCardViewTopText="03-Sep-2024 04:45:10 PM"
+                app:customCardViewCenterText="0 BDT"
+                app:customCardViewBottomText="Teletalk" />
 
             <bd.com.momagic.cbs.dashboard.android.ui.customcardview.CustomCardView
-                android:id="@+id/custom_card_view6"
+                android:id="@+id/airtelRevenue"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                app:customCardViewBackgroundColor="@color/midnight_blue"
+                app:customCardViewTextColor="@color/white"
+                app:customCardViewTopText="03-Sep-2024 04:45:10 PM"
+                app:customCardViewCenterText="0 BDT"
+                app:customCardViewBottomText="Airtel" />
+
+            <View
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/dark_gray" />
 
             <bd.com.momagic.cbs.dashboard.android.ui.customcardview.CustomCardView
-                android:id="@+id/custom_card_view7"
+                android:id="@+id/totalRevenue"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                app:customCardViewBackgroundColor="@color/navy_blue"
+                app:customCardViewTextColor="@color/white"
+                app:customCardViewTopText="03-Sep-2024 04:45:10 PM"
+                app:customCardViewCenterText="0 BDT"
+                app:customCardViewBottomText="Total Revenue" />
+
+            <View
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/dark_gray" />
 
             <bd.com.momagic.cbs.dashboard.android.ui.customcardview.CustomCardView
-                android:id="@+id/custom_card_view8"
+                android:id="@+id/totalSuccessCount"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                app:customCardViewBackgroundColor="@color/dodger_blue"
+                app:customCardViewTextColor="@color/white"
+                app:customCardViewTopText="03-Sep-2024 04:45:10 PM"
+                app:customCardViewCenterText="0"
+                app:customCardViewBottomText="Total Success Count" />
+
+            <bd.com.momagic.cbs.dashboard.android.ui.customcardview.CustomCardView
+                android:id="@+id/totalFailureCount"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:customCardViewBackgroundColor="@color/wet_asphalt"
+                app:customCardViewTextColor="@color/white"
+                app:customCardViewTopText="03-Sep-2024 04:45:10 PM"
+                app:customCardViewCenterText="0"
+                app:customCardViewBottomText="Total Failure Count" />
+
+            <View
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/dark_gray" />
+
+            <bd.com.momagic.cbs.dashboard.android.ui.customcardview.CustomCardView
+                android:id="@+id/totalSmsCount"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:customCardViewBackgroundColor="@color/navy_blue"
+                app:customCardViewTextColor="@color/white"
+                app:customCardViewTopText="03-Sep-2024 04:45:10 PM"
+                app:customCardViewCenterText="0"
+                app:customCardViewBottomText="Total SMS Received" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
         </LinearLayout>
     </ScrollView>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

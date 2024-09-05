@@ -1,28 +1,42 @@
 package bd.com.momagic.cbs.dashboard.android.ui.customcardview;
 
-import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 
 import bd.com.momagic.cbs.dashboard.android.R;
-import bd.com.momagic.cbs.dashboard.android.core.utilities.MiscellaneousUtilities;
-import bd.com.momagic.cbs.dashboard.android.core.utilities.NumberUtilities;
+import bd.com.momagic.cbs.dashboard.android.core.utilities.StringUtilities;
 import bd.com.momagic.cbs.dashboard.android.core.utilities.UiUtilities;
+import lombok.Getter;
 
 public class CustomCardView extends LinearLayout {
+
+    @Getter
+    private int customCardViewBackgroundColor;
+    @Getter
+    private int customCardViewTextColor;
+    @Getter
+    private String customCardViewTopText;
+    @Getter
+    private String customCardViewCenterText;
+    @Getter
+    private String customCardViewBottomText;
 
     private final Activity activity;
     private final TextView textViewTop;
     private final TextView textViewCenter;
     private final TextView textViewBottom;
+    private final CardView internalCardView;
 
-    private final ValueAnimator valueAnimator = ValueAnimator.ofInt(0, 0);
+    // private final ValueAnimator textViewCenterValueAnimator = ValueAnimator.ofInt(0, 0);
 
     public CustomCardView(Context context) {
         this(context, null);
@@ -47,34 +61,85 @@ public class CustomCardView extends LinearLayout {
         textViewTop = findViewById(R.id.textViewTop);
         textViewCenter = findViewById(R.id.textViewCenter);
         textViewBottom = findViewById(R.id.textViewBottom);
+        internalCardView = findViewById(R.id.internal_card_view);
 
-        valueAnimator.setDuration(3_000L);
-        valueAnimator.setRepeatCount(0);
-        valueAnimator.addUpdateListener(animation -> {
-            System.out.println("++++++++++++++ INSIDE ANIMATION....");
-
+        /*textViewCenterValueAnimator.setDuration(3_000L);
+        textViewCenterValueAnimator.setRepeatCount(0);
+        textViewCenterValueAnimator.addUpdateListener(animation -> {
             textViewCenter.setText(String.valueOf(animation.getAnimatedValue()));
-            textViewCenter.invalidate();
-            invalidate();
-        });
+        });*/
+
+        final int defaultBackgroundColor = getResources().getColor(R.color.white);
+        final int defaultTextColor = getResources().getColor(R.color.black);
+        int backgroundColor = defaultBackgroundColor;
+        int textColor = defaultTextColor;
+        String topText = StringUtilities.getEmptyString();
+        String centerText = StringUtilities.getEmptyString();
+        String bottomText = StringUtilities.getEmptyString();
+
+        if (attrs != null && !isInEditMode()) {
+            try (final TypedArray styledAttributes = getContext()
+                    .getTheme()
+                    .obtainStyledAttributes(attrs, R.styleable.CustomCardView, 0, 0)) {
+                backgroundColor = styledAttributes.getColor(
+                        R.styleable.CustomCardView_customCardViewBackgroundColor,
+                        defaultBackgroundColor);
+                textColor = styledAttributes.getColor(
+                        R.styleable.CustomCardView_customCardViewTextColor,
+                        defaultTextColor);
+                topText = styledAttributes.getString(R.styleable.CustomCardView_customCardViewTopText);
+                centerText = styledAttributes.getString(R.styleable.CustomCardView_customCardViewCenterText);
+                bottomText = styledAttributes.getString(R.styleable.CustomCardView_customCardViewBottomText);
+            }
+        }
+
+        setCustomCardViewBackgroundColor(backgroundColor);
+        setCustomCardViewTextColor(textColor);
+        setCustomCardViewTopText(topText);
+        setCustomCardViewCenterText(centerText);
+        setCustomCardViewBottomText(bottomText);
     }
 
-    public void setTextTop(final String text) {
-        textViewTop.setText(text);
+    public void setCustomCardViewBackgroundColor(@ColorInt final int customCardViewBackgroundColor) {
+        this.customCardViewBackgroundColor = customCardViewBackgroundColor;
+
+        activity.runOnUiThread(()
+                -> internalCardView.setCardBackgroundColor(this.customCardViewBackgroundColor));
     }
 
-    public void setTextCenter(final String text) {
-        final int currentValue = NumberUtilities.tryParseInteger(textViewCenter.getText().toString(), 0);
-        final int newValue = NumberUtilities.tryParseInteger(text, 0);
+    public void setCustomCardViewTextColor(@ColorInt int customCardViewTextColor) {
+        this.customCardViewTextColor = customCardViewTextColor;
 
         activity.runOnUiThread(() -> {
-            valueAnimator.setIntValues(currentValue, newValue);
-            valueAnimator.start();
+            textViewTop.setTextColor(this.customCardViewTextColor);
+            textViewCenter.setTextColor(this.customCardViewTextColor);
+            textViewBottom.setTextColor(this.customCardViewTextColor);
         });
-        // textViewCenter.setText(text);
     }
 
-    public void setTextBottom(final String text) {
-        textViewBottom.setText(text);
+    public void setCustomCardViewTopText(final String text) {
+        customCardViewTopText = text;
+
+        activity.runOnUiThread(() -> textViewTop.setText(customCardViewTopText));
+    }
+
+    public void setCustomCardViewCenterText(final String text) {
+        customCardViewCenterText = text;
+
+        activity.runOnUiThread(() -> textViewCenter.setText(customCardViewCenterText));
+
+        // final int currentValue = NumberUtilities.tryParseInteger(textViewCenter.getText().toString(), 0);
+        // final int newValue = NumberUtilities.tryParseInteger(text, 0);
+
+        /*activity.runOnUiThread(() -> {
+            textViewCenterValueAnimator.setIntValues(currentValue, newValue);
+            textViewCenterValueAnimator.start();
+        });*/
+    }
+
+    public void setCustomCardViewBottomText(final String text) {
+        customCardViewBottomText = text;
+
+        activity.runOnUiThread(() -> textViewBottom.setText(customCardViewBottomText));
     }
 }

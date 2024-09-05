@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CustomCardView">
+        <!-- Background color for CustomCardView -->
+        <attr name="customCardViewBackgroundColor" format="color" />
+        <!-- Text color for CustomCardView -->
+        <attr name="customCardViewTextColor" format="color" />
+        <!-- Top text for CustomCardView -->
+        <attr name="customCardViewTopText" format="string" />
+        <!-- Center text for CustomCardView -->
+        <attr name="customCardViewCenterText" format="string" />
+        <!-- Bottom text for CustomCardView -->
+        <attr name="customCardViewBottomText" format="string" />
+    </declare-styleable>
+</resources>
