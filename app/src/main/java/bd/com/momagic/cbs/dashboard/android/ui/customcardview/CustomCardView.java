@@ -32,6 +32,12 @@ public class CustomCardView extends LinearLayout {
     @Getter
     private String customCardViewTopText;
     @Getter
+    private String customCardViewCenterTextPrefix;
+    @Getter
+    private String customCardViewCenterTextSuffix;
+    @Getter
+    private long customCardViewCenterTextNumericValue;
+    @Getter
     private String customCardViewCenterText;
     @Getter
     private String customCardViewBottomText;
@@ -42,7 +48,7 @@ public class CustomCardView extends LinearLayout {
     private final TextView textViewBottom;
     private final CardView internalCardView;
 
-    // private final ValueAnimator textViewCenterValueAnimator = ValueAnimator.ofInt(0, 0);
+    private final ValueAnimator textViewCenterValueAnimator = ValueAnimator.ofInt(0, 0);
     private final ValueAnimator internalCardViewBackgroundColorAnimator = ValueAnimator.ofArgb(0, 0);
     /*private final TransitionDrawable transitionDrawable = new TransitionDrawable(new Drawable[] {
             new ColorDrawable(Color.BLUE), new ColorDrawable(Color.RED)
@@ -73,12 +79,6 @@ public class CustomCardView extends LinearLayout {
         textViewBottom = findViewById(R.id.textViewBottom);
         internalCardView = findViewById(R.id.internal_card_view);
 
-        /*textViewCenterValueAnimator.setDuration(3_000L);
-        textViewCenterValueAnimator.setRepeatCount(0);
-        textViewCenterValueAnimator.addUpdateListener(animation -> {
-            textViewCenter.setText(String.valueOf(animation.getAnimatedValue()));
-        });*/
-
         final int defaultBackgroundColor = getResources().getColor(R.color.white);
         final int defaultTextColor = getResources().getColor(R.color.black);
         int backgroundColor = defaultBackgroundColor;
@@ -86,6 +86,9 @@ public class CustomCardView extends LinearLayout {
         int dangerBackgroundColor = defaultBackgroundColor;
         int textColor = defaultTextColor;
         String topText = StringUtilities.getEmptyString();
+        long centerTextNumericValue = 0L;
+        String centerTextPrefix = StringUtilities.getEmptyString();
+        String centerTextSuffix = StringUtilities.getEmptyString();
         String centerText = StringUtilities.getEmptyString();
         String bottomText = StringUtilities.getEmptyString();
 
@@ -105,9 +108,23 @@ public class CustomCardView extends LinearLayout {
                 textColor = styledAttributes.getColor(
                         R.styleable.CustomCardView_customCardViewTextColor,
                         defaultTextColor);
-                topText = styledAttributes.getString(R.styleable.CustomCardView_customCardViewTopText);
-                centerText = styledAttributes.getString(R.styleable.CustomCardView_customCardViewCenterText);
-                bottomText = styledAttributes.getString(R.styleable.CustomCardView_customCardViewBottomText);
+                topText = StringUtilities.getDefaultIfNullOrEmpty(styledAttributes.getString(
+                        R.styleable.CustomCardView_customCardViewTopText),
+                        StringUtilities.getEmptyString(), false);
+                centerTextNumericValue = styledAttributes.getInteger(
+                        R.styleable.CustomCardView_customCardViewCenterTextNumericValue, 0);
+                centerTextPrefix = StringUtilities.getDefaultIfNullOrEmpty(styledAttributes.getString(
+                        R.styleable.CustomCardView_customCardViewCenterTextPrefix),
+                        StringUtilities.getEmptyString(), false);
+                centerTextSuffix = StringUtilities.getDefaultIfNullOrEmpty(styledAttributes.getString(
+                        R.styleable.CustomCardView_customCardViewCenterTextSuffix),
+                        StringUtilities.getEmptyString(), false);
+                centerText = StringUtilities.getDefaultIfNullOrEmpty(styledAttributes.getString(
+                        R.styleable.CustomCardView_customCardViewCenterText),
+                        StringUtilities.getEmptyString(), false);
+                bottomText = StringUtilities.getDefaultIfNullOrEmpty(styledAttributes.getString(
+                        R.styleable.CustomCardView_customCardViewBottomText),
+                        StringUtilities.getEmptyString(), false);
             }
         }
 
@@ -116,8 +133,19 @@ public class CustomCardView extends LinearLayout {
         setCustomCardViewDangerBackgroundColor(dangerBackgroundColor);
         setCustomCardViewTextColor(textColor);
         setCustomCardViewTopText(topText);
+        setCustomCardViewCenterTextNumericValue(centerTextNumericValue);
+        setCustomCardViewCenterTextPrefix(centerTextPrefix);
+        setCustomCardViewCenterTextSuffix(centerTextSuffix);
         setCustomCardViewCenterText(centerText);
         setCustomCardViewBottomText(bottomText);
+
+        textViewCenterValueAnimator.setDuration(3_000L);
+        textViewCenterValueAnimator.setRepeatCount(0);
+        textViewCenterValueAnimator.addUpdateListener(animation -> {
+            setCustomCardViewCenterText(getCustomCardViewCenterTextPrefix()
+                    + animation.getAnimatedValue()
+                    + getCustomCardViewCenterTextSuffix());
+        });
 
         internalCardViewBackgroundColorAnimator.setDuration(850L);
         internalCardViewBackgroundColorAnimator.setRepeatMode(ValueAnimator.REVERSE);
@@ -195,6 +223,34 @@ public class CustomCardView extends LinearLayout {
         customCardViewTopText = text;
 
         activity.runOnUiThread(() -> textViewTop.setText(customCardViewTopText));
+    }
+
+    public void setCustomCardViewCenterTextNumericValue(final long numericValue) {
+        final int currentValue = (int) customCardViewCenterTextNumericValue;
+        final int newValue = (int) numericValue;
+
+        customCardViewCenterTextNumericValue = numericValue;
+
+        activity.runOnUiThread(() -> {
+            textViewCenterValueAnimator.setIntValues(currentValue, newValue);
+            textViewCenterValueAnimator.start();
+        });
+    }
+
+    public void setCustomCardViewCenterTextPrefix(final String text) {
+        customCardViewCenterTextPrefix = text;
+
+        setCustomCardViewCenterText(getCustomCardViewCenterTextPrefix()
+                + getCustomCardViewCenterTextNumericValue()
+                + getCustomCardViewCenterTextSuffix());
+    }
+
+    public void setCustomCardViewCenterTextSuffix(final String text) {
+        customCardViewCenterTextSuffix = text;
+
+        setCustomCardViewCenterText(getCustomCardViewCenterTextPrefix()
+                + getCustomCardViewCenterTextNumericValue()
+                + getCustomCardViewCenterTextSuffix());
     }
 
     public void setCustomCardViewCenterText(final String text) {

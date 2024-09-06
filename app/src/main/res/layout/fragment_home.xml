@@ -27,7 +27,8 @@
                 app:customCardViewDangerBackgroundColor="@color/red"
                 app:customCardViewTextColor="@color/white"
                 app:customCardViewTopText="03-Sep-2024 04:45:10 PM"
-                app:customCardViewCenterText="0 BDT"
+                app:customCardViewCenterTextNumericValue="0"
+                app:customCardViewCenterTextSuffix=" BDT"
                 app:customCardViewBottomText="Banglalink" />
 
             <bd.com.momagic.cbs.dashboard.android.ui.customcardview.CustomCardView
@@ -37,7 +38,8 @@
                 app:customCardViewBackgroundColor="@color/dodger_blue"
                 app:customCardViewTextColor="@color/white"
                 app:customCardViewTopText="03-Sep-2024 04:45:10 PM"
-                app:customCardViewCenterText="0 BDT"
+                app:customCardViewCenterTextNumericValue="0"
+                app:customCardViewCenterTextSuffix=" BDT"
                 app:customCardViewBottomText="Grameenphone" />
 
             <bd.com.momagic.cbs.dashboard.android.ui.customcardview.CustomCardView
@@ -47,7 +49,8 @@
                 app:customCardViewBackgroundColor="@color/orange"
                 app:customCardViewTextColor="@color/white"
                 app:customCardViewTopText="03-Sep-2024 04:45:10 PM"
-                app:customCardViewCenterText="0 BDT"
+                app:customCardViewCenterTextNumericValue="0"
+                app:customCardViewCenterTextSuffix=" BDT"
                 app:customCardViewBottomText="ROBI" />
 
             <bd.com.momagic.cbs.dashboard.android.ui.customcardview.CustomCardView
@@ -57,7 +60,8 @@
                 app:customCardViewBackgroundColor="@color/green"
                 app:customCardViewTextColor="@color/white"
                 app:customCardViewTopText="03-Sep-2024 04:45:10 PM"
-                app:customCardViewCenterText="0 BDT"
+                app:customCardViewCenterTextNumericValue="0"
+                app:customCardViewCenterTextSuffix=" BDT"
                 app:customCardViewBottomText="Teletalk" />
 
             <bd.com.momagic.cbs.dashboard.android.ui.customcardview.CustomCardView
@@ -67,7 +71,8 @@
                 app:customCardViewBackgroundColor="@color/midnight_blue"
                 app:customCardViewTextColor="@color/white"
                 app:customCardViewTopText="03-Sep-2024 04:45:10 PM"
-                app:customCardViewCenterText="0 BDT"
+                app:customCardViewCenterTextNumericValue="0"
+                app:customCardViewCenterTextSuffix=" BDT"
                 app:customCardViewBottomText="Airtel" />
 
             <View
@@ -83,7 +88,8 @@
                 app:customCardViewBackgroundColor="@color/navy_blue"
                 app:customCardViewTextColor="@color/white"
                 app:customCardViewTopText="03-Sep-2024 04:45:10 PM"
-                app:customCardViewCenterText="0 BDT"
+                app:customCardViewCenterTextNumericValue="0"
+                app:customCardViewCenterTextSuffix=" BDT"
                 app:customCardViewBottomText="Total Revenue" />
 
             <View

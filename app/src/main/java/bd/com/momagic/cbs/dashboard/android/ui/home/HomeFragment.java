@@ -31,9 +31,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
             binding.banglalinkRevenue.showDangerAlert();
 
-            ThreadUtilities.trySleep(10_000);
-
-            binding.banglalinkRevenue.resetAlert();
+            binding.banglalinkRevenue.setCustomCardViewCenterTextNumericValue(9999);
         });
 
         return binding.getRoot();

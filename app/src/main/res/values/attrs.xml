@@ -13,6 +13,12 @@
         <attr name="customCardViewTopText" format="string" />
         <!-- Center text for CustomCardView -->
         <attr name="customCardViewCenterText" format="string" />
+        <!-- Center text for CustomCardView -->
+        <attr name="customCardViewCenterTextPrefix" format="string" />
+        <!-- Center text for CustomCardView -->
+        <attr name="customCardViewCenterTextNumericValue" format="integer" />
+        <!-- Center text for CustomCardView -->
+        <attr name="customCardViewCenterTextSuffix" format="string" />
         <!-- Bottom text for CustomCardView -->
         <attr name="customCardViewBottomText" format="string" />
     </declare-styleable>
