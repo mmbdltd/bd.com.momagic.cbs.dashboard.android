@@ -1,5 +1,6 @@
 package bd.com.momagic.cbs.dashboard.android.ui.customcardview;
 
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -19,8 +20,13 @@ import lombok.Getter;
 
 public class CustomCardView extends LinearLayout {
 
+    private volatile boolean resetAlert = false;
     @Getter
     private int customCardViewBackgroundColor;
+    @Getter
+    private int customCardViewWarningBackgroundColor;
+    @Getter
+    private int customCardViewDangerBackgroundColor;
     @Getter
     private int customCardViewTextColor;
     @Getter
@@ -37,6 +43,10 @@ public class CustomCardView extends LinearLayout {
     private final CardView internalCardView;
 
     // private final ValueAnimator textViewCenterValueAnimator = ValueAnimator.ofInt(0, 0);
+    private final ValueAnimator internalCardViewBackgroundColorAnimator = ValueAnimator.ofArgb(0, 0);
+    /*private final TransitionDrawable transitionDrawable = new TransitionDrawable(new Drawable[] {
+            new ColorDrawable(Color.BLUE), new ColorDrawable(Color.RED)
+    });*/
 
     public CustomCardView(Context context) {
         this(context, null);
@@ -72,6 +82,8 @@ public class CustomCardView extends LinearLayout {
         final int defaultBackgroundColor = getResources().getColor(R.color.white);
         final int defaultTextColor = getResources().getColor(R.color.black);
         int backgroundColor = defaultBackgroundColor;
+        int warningBackgroundColor = defaultBackgroundColor;
+        int dangerBackgroundColor = defaultBackgroundColor;
         int textColor = defaultTextColor;
         String topText = StringUtilities.getEmptyString();
         String centerText = StringUtilities.getEmptyString();
@@ -84,6 +96,12 @@ public class CustomCardView extends LinearLayout {
                 backgroundColor = styledAttributes.getColor(
                         R.styleable.CustomCardView_customCardViewBackgroundColor,
                         defaultBackgroundColor);
+                warningBackgroundColor = styledAttributes.getColor(
+                        R.styleable.CustomCardView_customCardViewWarningBackgroundColor,
+                        defaultBackgroundColor);
+                dangerBackgroundColor = styledAttributes.getColor(
+                        R.styleable.CustomCardView_customCardViewDangerBackgroundColor,
+                        defaultBackgroundColor);
                 textColor = styledAttributes.getColor(
                         R.styleable.CustomCardView_customCardViewTextColor,
                         defaultTextColor);
@@ -94,17 +112,73 @@ public class CustomCardView extends LinearLayout {
         }
 
         setCustomCardViewBackgroundColor(backgroundColor);
+        setCustomCardViewWarningBackgroundColor(warningBackgroundColor);
+        setCustomCardViewDangerBackgroundColor(dangerBackgroundColor);
         setCustomCardViewTextColor(textColor);
         setCustomCardViewTopText(topText);
         setCustomCardViewCenterText(centerText);
         setCustomCardViewBottomText(bottomText);
+
+        internalCardViewBackgroundColorAnimator.setDuration(850L);
+        internalCardViewBackgroundColorAnimator.setRepeatMode(ValueAnimator.REVERSE);
+        internalCardViewBackgroundColorAnimator.addUpdateListener(valueAnimator -> {
+            final int animatedColor = (int) valueAnimator.getAnimatedValue();
+
+            // if reset alert request is received...
+            if (resetAlert && animatedColor == customCardViewBackgroundColor) {
+                // we'll reset the flag...
+                resetAlert = false;
+
+                // and stop the animation...
+                valueAnimator.end();
+            }
+
+            // setting the background color...
+            internalCardView.setCardBackgroundColor(animatedColor);
+        });
+
+        // trans.startTransition(5000);
     }
 
-    public void setCustomCardViewBackgroundColor(@ColorInt final int customCardViewBackgroundColor) {
-        this.customCardViewBackgroundColor = customCardViewBackgroundColor;
+    public void setCustomCardViewBackgroundColor(@ColorInt final int color) {
+        customCardViewBackgroundColor = color;
 
         activity.runOnUiThread(()
-                -> internalCardView.setCardBackgroundColor(this.customCardViewBackgroundColor));
+                -> internalCardView.setCardBackgroundColor(customCardViewBackgroundColor));
+    }
+
+    public void setCustomCardViewWarningBackgroundColor(@ColorInt final int color) {
+        customCardViewWarningBackgroundColor = color;
+    }
+
+    public void setCustomCardViewDangerBackgroundColor(@ColorInt final int color) {
+        customCardViewDangerBackgroundColor = color;
+    }
+
+    public void showWarningAlert() {
+        activity.runOnUiThread(() -> {
+            internalCardViewBackgroundColorAnimator.end();
+            internalCardViewBackgroundColorAnimator.setIntValues(
+                    customCardViewBackgroundColor,
+                    customCardViewWarningBackgroundColor);
+            internalCardViewBackgroundColorAnimator.setRepeatCount(ValueAnimator.INFINITE);
+            internalCardViewBackgroundColorAnimator.start();
+        });
+    }
+
+    public void showDangerAlert() {
+        activity.runOnUiThread(() -> {
+            internalCardViewBackgroundColorAnimator.end();
+            internalCardViewBackgroundColorAnimator.setIntValues(
+                    customCardViewBackgroundColor,
+                    customCardViewDangerBackgroundColor);
+            internalCardViewBackgroundColorAnimator.setRepeatCount(ValueAnimator.INFINITE);
+            internalCardViewBackgroundColorAnimator.start();
+        });
+    }
+
+    public void resetAlert() {
+        resetAlert = true;
     }
 
     public void setCustomCardViewTextColor(@ColorInt int customCardViewTextColor) {

@@ -23,6 +23,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:customCardViewBackgroundColor="@color/iris"
+                app:customCardViewWarningBackgroundColor="@color/yellow"
+                app:customCardViewDangerBackgroundColor="@color/red"
                 app:customCardViewTextColor="@color/white"
                 app:customCardViewTopText="03-Sep-2024 04:45:10 PM"
                 app:customCardViewCenterText="0 BDT"

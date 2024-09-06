@@ -3,6 +3,10 @@
     <declare-styleable name="CustomCardView">
         <!-- Background color for CustomCardView -->
         <attr name="customCardViewBackgroundColor" format="color" />
+        <!-- Warning background color for CustomCardView -->
+        <attr name="customCardViewWarningBackgroundColor" format="color" />
+        <!-- Danger background color for CustomCardView -->
+        <attr name="customCardViewDangerBackgroundColor" format="color" />
         <!-- Text color for CustomCardView -->
         <attr name="customCardViewTextColor" format="color" />
         <!-- Top text for CustomCardView -->
