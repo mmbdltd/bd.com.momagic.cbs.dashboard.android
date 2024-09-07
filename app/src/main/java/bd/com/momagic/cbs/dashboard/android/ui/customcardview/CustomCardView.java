@@ -13,12 +13,20 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 import bd.com.momagic.cbs.dashboard.android.R;
+import bd.com.momagic.cbs.dashboard.android.core.concurrency.ThreadSafeExecutor;
+import bd.com.momagic.cbs.dashboard.android.core.concurrency.ThreadSafeLong;
 import bd.com.momagic.cbs.dashboard.android.core.utilities.StringUtilities;
+import bd.com.momagic.cbs.dashboard.android.core.utilities.ThreadUtilities;
 import bd.com.momagic.cbs.dashboard.android.core.utilities.UiUtilities;
 import lombok.Getter;
 
-public class CustomCardView extends LinearLayout {
+public class CustomCardView extends LinearLayout implements Runnable {
 
     private volatile boolean resetAlert = false;
     @Getter
@@ -35,8 +43,9 @@ public class CustomCardView extends LinearLayout {
     private String customCardViewCenterTextPrefix;
     @Getter
     private String customCardViewCenterTextSuffix;
-    @Getter
-    private long customCardViewCenterTextNumericValue;
+    private final ThreadSafeLong customCardViewCenterTextCurrentNumericValue = new ThreadSafeLong(0L);
+    private final ThreadSafeLong customCardViewCenterTextNumericValue = new ThreadSafeLong(0L);
+    private static Thread backgroundThread;
     @Getter
     private String customCardViewCenterText;
     @Getter
@@ -50,6 +59,10 @@ public class CustomCardView extends LinearLayout {
 
     private final ValueAnimator textViewCenterValueAnimator = ValueAnimator.ofInt(0, 0);
     private final ValueAnimator internalCardViewBackgroundColorAnimator = ValueAnimator.ofArgb(0, 0);
+
+    private static final Lock customCardViewListLock = new ReentrantLock(false);
+    private static final List<CustomCardView> customCardViewList = new ArrayList<>();
+
     /*private final TransitionDrawable transitionDrawable = new TransitionDrawable(new Drawable[] {
             new ColorDrawable(Color.BLUE), new ColorDrawable(Color.RED)
     });*/
@@ -68,6 +81,8 @@ public class CustomCardView extends LinearLayout {
 
     public CustomCardView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+
+        customCardViewList.add(this);
 
         final LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -168,6 +183,20 @@ public class CustomCardView extends LinearLayout {
         // trans.startTransition(5000);
     }
 
+    public long getCustomCardViewCenterTextNumericValue() {
+        return customCardViewCenterTextNumericValue.get();
+    }
+
+    private void addToList(final CustomCardView cardView) {
+        ThreadSafeExecutor.execute(customCardViewListLock,
+                () -> customCardViewList.add(cardView));
+    }
+
+    private List<CustomCardView> copyList() {
+        return ThreadSafeExecutor.execute(customCardViewListLock,
+                () -> new ArrayList<>(customCardViewList));
+    }
+
     public void setCustomCardViewBackgroundColor(@ColorInt final int color) {
         customCardViewBackgroundColor = color;
 
@@ -226,15 +255,7 @@ public class CustomCardView extends LinearLayout {
     }
 
     public void setCustomCardViewCenterTextNumericValue(final long numericValue) {
-        final int currentValue = (int) customCardViewCenterTextNumericValue;
-        final int newValue = (int) numericValue;
-
-        customCardViewCenterTextNumericValue = numericValue;
-
-        activity.runOnUiThread(() -> {
-            textViewCenterValueAnimator.setIntValues(currentValue, newValue);
-            textViewCenterValueAnimator.start();
-        });
+        customCardViewCenterTextNumericValue.set(numericValue);
     }
 
     public void setCustomCardViewCenterTextPrefix(final String text) {
@@ -271,5 +292,36 @@ public class CustomCardView extends LinearLayout {
         customCardViewBottomText = text;
 
         activity.runOnUiThread(() -> textViewBottom.setText(customCardViewBottomText));
+    }
+
+    @Override
+    public void run() {
+        while (true) {
+            final List<CustomCardView> customCardViewList = copyList();
+
+            for (final CustomCardView cardView : customCardViewList) {
+                final int currentValue = (int) cardView.customCardViewCenterTextCurrentNumericValue.get();
+                final int newValue = (int) getCustomCardViewCenterTextNumericValue();
+                cardView.customCardViewCenterTextCurrentNumericValue.set(newValue);
+
+                activity.runOnUiThread(() -> {
+                    textViewCenterValueAnimator.end();
+                    textViewCenterValueAnimator.setIntValues(currentValue, newValue);
+                    textViewCenterValueAnimator.start();
+                });
+            }
+
+            ThreadUtilities.trySleep(1_000);
+        }
+    }
+
+    public static void startBackgroundThread() {
+        if (backgroundThread != null || customCardViewList.isEmpty()) { return; }
+
+        final CustomCardView cardView = customCardViewList.get(0);
+        backgroundThread = new Thread(cardView);
+        backgroundThread.setPriority(Thread.MIN_PRIORITY);
+        backgroundThread.setDaemon(false);
+        backgroundThread.start();
     }
 }

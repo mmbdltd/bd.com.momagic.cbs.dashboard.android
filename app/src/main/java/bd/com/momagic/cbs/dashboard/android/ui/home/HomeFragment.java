@@ -13,6 +13,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import bd.com.momagic.cbs.dashboard.android.core.threading.AsyncTask;
 import bd.com.momagic.cbs.dashboard.android.core.utilities.ThreadUtilities;
 import bd.com.momagic.cbs.dashboard.android.databinding.FragmentHomeBinding;
+import bd.com.momagic.cbs.dashboard.android.ui.customcardview.CustomCardView;
 
 public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -26,12 +27,16 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         binding.swipeRefreshLayout.setOnRefreshListener(this);
 
+        CustomCardView.startBackgroundThread();
+
         AsyncTask.run(() -> {
             ThreadUtilities.trySleep(2_000);
 
             binding.banglalinkRevenue.showDangerAlert();
 
-            binding.banglalinkRevenue.setCustomCardViewCenterTextNumericValue(9999);
+            for (int i = 0; i < 10_00_000; ++i) {
+                binding.banglalinkRevenue.setCustomCardViewCenterTextNumericValue(i);
+            }
         });
 
         return binding.getRoot();
