@@ -21,8 +21,9 @@ import java.util.concurrent.locks.ReentrantLock;
 import bd.com.momagic.cbs.dashboard.android.R;
 import bd.com.momagic.cbs.dashboard.android.core.concurrency.ThreadSafeExecutor;
 import bd.com.momagic.cbs.dashboard.android.core.concurrency.ThreadSafeLong;
+import bd.com.momagic.cbs.dashboard.android.core.threading.BackgroundTaskExecutor;
+import bd.com.momagic.cbs.dashboard.android.core.utilities.NumberUtilities;
 import bd.com.momagic.cbs.dashboard.android.core.utilities.StringUtilities;
-import bd.com.momagic.cbs.dashboard.android.core.utilities.ThreadUtilities;
 import bd.com.momagic.cbs.dashboard.android.core.utilities.UiUtilities;
 import lombok.Getter;
 
@@ -45,7 +46,8 @@ public class CustomCardView extends LinearLayout implements Runnable {
     private String customCardViewCenterTextSuffix;
     private final ThreadSafeLong customCardViewCenterTextCurrentNumericValue = new ThreadSafeLong(0L);
     private final ThreadSafeLong customCardViewCenterTextNumericValue = new ThreadSafeLong(0L);
-    private static Thread backgroundThread;
+    private static final BackgroundTaskExecutor backgroundTaskExecutor = BackgroundTaskExecutor.createInstance(true);
+
     @Getter
     private String customCardViewCenterText;
     @Getter
@@ -154,11 +156,14 @@ public class CustomCardView extends LinearLayout implements Runnable {
         setCustomCardViewCenterText(centerText);
         setCustomCardViewBottomText(bottomText);
 
-        textViewCenterValueAnimator.setDuration(3_000L);
+        textViewCenterValueAnimator.setDuration(1_000L);
         textViewCenterValueAnimator.setRepeatCount(0);
         textViewCenterValueAnimator.addUpdateListener(animation -> {
+            final int animatedValue = (int) animation.getAnimatedValue();
+            final String formattedValue = NumberUtilities.format(animatedValue);
+
             setCustomCardViewCenterText(getCustomCardViewCenterTextPrefix()
-                    + animation.getAnimatedValue()
+                    + formattedValue
                     + getCustomCardViewCenterTextSuffix());
         });
 
@@ -180,6 +185,8 @@ public class CustomCardView extends LinearLayout implements Runnable {
             internalCardView.setCardBackgroundColor(animatedColor);
         });
 
+        // this shall add the task to the queue...
+        backgroundTaskExecutor.execute(this);
         // trans.startTransition(5000);
     }
 
@@ -296,26 +303,22 @@ public class CustomCardView extends LinearLayout implements Runnable {
 
     @Override
     public void run() {
-        while (true) {
-            final List<CustomCardView> customCardViewList = copyList();
+        final List<CustomCardView> customCardViewList = copyList();
 
-            for (final CustomCardView cardView : customCardViewList) {
-                final int currentValue = (int) cardView.customCardViewCenterTextCurrentNumericValue.get();
-                final int newValue = (int) getCustomCardViewCenterTextNumericValue();
-                cardView.customCardViewCenterTextCurrentNumericValue.set(newValue);
+        for (final CustomCardView cardView : customCardViewList) {
+            final int currentValue = (int) cardView.customCardViewCenterTextCurrentNumericValue.get();
+            final int newValue = (int) cardView.getCustomCardViewCenterTextNumericValue();
+            cardView.customCardViewCenterTextCurrentNumericValue.set(newValue);
 
-                activity.runOnUiThread(() -> {
-                    textViewCenterValueAnimator.end();
-                    textViewCenterValueAnimator.setIntValues(currentValue, newValue);
-                    textViewCenterValueAnimator.start();
-                });
-            }
-
-            ThreadUtilities.trySleep(1_000);
+            activity.runOnUiThread(() -> {
+                cardView.textViewCenterValueAnimator.end();
+                cardView.textViewCenterValueAnimator.setIntValues(currentValue, newValue);
+                cardView.textViewCenterValueAnimator.start();
+            });
         }
     }
 
-    public static void startBackgroundThread() {
+    /*public static void startBackgroundThread() {
         if (backgroundThread != null || customCardViewList.isEmpty()) { return; }
 
         final CustomCardView cardView = customCardViewList.get(0);
@@ -323,5 +326,5 @@ public class CustomCardView extends LinearLayout implements Runnable {
         backgroundThread.setPriority(Thread.MIN_PRIORITY);
         backgroundThread.setDaemon(false);
         backgroundThread.start();
-    }
+    }*/
 }

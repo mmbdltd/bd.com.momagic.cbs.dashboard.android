@@ -13,7 +13,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import bd.com.momagic.cbs.dashboard.android.core.threading.AsyncTask;
 import bd.com.momagic.cbs.dashboard.android.core.utilities.ThreadUtilities;
 import bd.com.momagic.cbs.dashboard.android.databinding.FragmentHomeBinding;
-import bd.com.momagic.cbs.dashboard.android.ui.customcardview.CustomCardView;
 
 public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -27,15 +26,25 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         binding.swipeRefreshLayout.setOnRefreshListener(this);
 
-        CustomCardView.startBackgroundThread();
+        // CustomCardView.startBackgroundThread();
 
         AsyncTask.run(() -> {
             ThreadUtilities.trySleep(2_000);
 
             binding.banglalinkRevenue.showDangerAlert();
+            binding.grameenphoneRevenue.showWarningAlert();
+            binding.robiRevenue.showDangerAlert();
+            binding.teletalkRevenue.showWarningAlert();
+            binding.airtelRevenue.showWarningAlert();
 
-            for (int i = 0; i < 10_00_000; ++i) {
+            for (int i = 0; i < 100_00_000; ++i) {
                 binding.banglalinkRevenue.setCustomCardViewCenterTextNumericValue(i);
+                binding.grameenphoneRevenue.setCustomCardViewCenterTextNumericValue(i);
+                binding.robiRevenue.setCustomCardViewCenterTextNumericValue(i);
+                binding.teletalkRevenue.setCustomCardViewCenterTextNumericValue(i);
+                binding.airtelRevenue.setCustomCardViewCenterTextNumericValue(i);
+
+                ThreadUtilities.trySleep(20);
             }
         });
 

@@ -106,4 +106,22 @@ public final class NumberUtilities {
         // returns the numeric value...
         return numericValue;
     }
+
+    public static String format(final double value) {
+        final String valueAsString = String.valueOf(Math.round(value));
+        final char[] valueAsCharacterArray = valueAsString.toCharArray();
+        final StringBuilder formattedValueBuilder = new StringBuilder(valueAsCharacterArray.length + Byte.SIZE);
+
+        for (int i = valueAsCharacterArray.length - 1, j = 1; i > -1; --i) {
+            formattedValueBuilder.append(valueAsCharacterArray[i]);
+
+            if (i != 0 && (j == 3 || j == 5 || j == 7)) {
+                formattedValueBuilder.append(',');
+            }
+
+            ++j;
+        }
+
+        return formattedValueBuilder.reverse().toString();
+    }
 }
